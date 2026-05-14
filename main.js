@@ -287,6 +287,25 @@ class UIController {
         const percentage = (clampedTotal / 17) * 100;
         this.markerValue.textContent = total;
 
+        // Color the marker ball based on zone
+        let markerColor, markerGlow;
+        if (clampedTotal < 5) {
+            markerColor = '#dc2626'; // Katastrof - red
+            markerGlow = 'rgba(220, 38, 38, 0.6)';
+        } else if (clampedTotal < 10) {
+            markerColor = '#f59e0b'; // Misslyckat - amber
+            markerGlow = 'rgba(245, 158, 11, 0.6)';
+        } else if (clampedTotal < 13) {
+            markerColor = '#10b981'; // Ok - green
+            markerGlow = 'rgba(16, 185, 129, 0.6)';
+        } else {
+            markerColor = '#3b82f6'; // Blomstrande - blue
+            markerGlow = 'rgba(59, 130, 246, 0.6)';
+        }
+        this.markerValue.style.backgroundColor = markerColor;
+        this.markerValue.style.color = '#fff';
+        this.markerValue.style.boxShadow = `0 0 16px ${markerGlow}, 0 4px 8px rgba(0,0,0,0.3)`;
+
         // Reset marker to 0 first, then animate to position
         this.scoreMarker.style.transition = 'none';
         this.scoreMarker.style.left = '0%';
