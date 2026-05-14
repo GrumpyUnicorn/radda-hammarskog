@@ -319,20 +319,68 @@ body[data-theme="C"] .card.selected { background-color: rgba(14, 165, 233, 0.1);
     margin-bottom: 1.5rem;
 }
 
-.target-container {
-    font-size: 1.5rem;
-    font-weight: 600;
+.target-tiers {
     display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.tier {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
+}
+
+.tier-label {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.tier-value {
+    font-size: 2rem;
+    font-family: var(--font-heading);
 }
 
 .target-badge {
     background-color: var(--primary-color);
     color: #fff;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.2rem;
     border-radius: var(--border-radius);
     font-family: var(--font-heading);
+    display: inline-block;
+}
+
+.tier-stretch .target-badge {
+    background-color: #f59e0b;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.char-bonus-section {
+    text-align: center;
+}
+
+.bonus-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    font-size: 1.3rem;
+}
+
+.bonus-name {
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.bonus-value {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
 }
 
 /* Modifiers */
@@ -498,4 +546,38 @@ body[data-theme="C"] .outcome-success.extra-success .dice-box {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    #app {
+        padding: 1rem;
+    }
+
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .screen-title {
+        font-size: 2rem;
+    }
+
+    .subtitle, .task-desc {
+        font-size: 1rem;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .card, .task-panel, .outcome-panel {
+        padding: 1rem;
+    }
+
+    .dice-box {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
 }

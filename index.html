@@ -77,23 +77,26 @@
                 
                 <!-- Middle Section: Mechanics -->
                 <div class="task-panel section-panel">
-                    <div class="target-container">
-                        <span>Svårighetsgrad: </span><span id="target-number" class="target-badge"></span>
+                    <h3 class="text-center" style="margin-bottom: 1rem;">Svårighetsgrad</h3>
+                    <p class="difficulty-desc" style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 1.5rem; text-align: center;">(Svårighetsgraden är det tal du måste slå med två tärningar för att lyckas)</p>
+
+                    <div class="target-tiers">
+                        <div class="tier">
+                            <span class="tier-label">OK verksamhet</span>
+                            <span class="tier-value target-badge">10</span>
+                        </div>
+                        <div class="tier tier-stretch">
+                            <span class="tier-label">Blomstrande verksamhet</span>
+                            <span class="tier-value target-badge">13</span>
+                        </div>
                     </div>
-                    <p class="difficulty-desc" style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1rem;">(Svårighetsgraden är det tal du måste slå med två tärningar för att lyckas)</p>
-                    
-                    <div id="modifiers-container" class="modifiers-panel hidden mt-4">
-                        <h3>Bonusar</h3>
-                        <label class="modifier-checkbox">
-                            <input type="checkbox" id="mod-1" value="1">
-                            <span class="checkmark"></span>
-                            Gör om till arbetsmarknadsprojekt (+1)
-                        </label>
-                        <label class="modifier-checkbox">
-                            <input type="checkbox" id="mod-2" value="1">
-                            <span class="checkmark"></span>
-                            Använd skattepengar till driften (+1)
-                        </label>
+
+                    <div class="char-bonus-section mt-4">
+                        <h3 class="text-center">Din ekonomiska modell</h3>
+                        <div class="bonus-display" id="bonus-display">
+                            <span id="char-bonus-name" class="bonus-name"></span>
+                            <span id="char-bonus-value" class="bonus-value"></span>
+                        </div>
                     </div>
 
                     <div class="dice-area text-center mt-4">

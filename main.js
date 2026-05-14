@@ -45,24 +45,25 @@ const GameLogic = {
 class UIController {
     constructor(state) {
         this.state = state;
+        // Universal targets for all characters
+        this.TARGET_OK = 10;
+        this.TARGET_BLOMSTRANDE = 13;
+
         this.characterData = {
             'A': {
                 task: "Tillsammans med Skandal-Tobbe väljer du att försöka driva kafé och restaurang i kommunal regi utan vinstintressen. Huset i Hammarskog förblir i kommunens ägo eftersom det är viktigt att politiker har stor kontroll.",
-                target: 12,
-                stretch: null,
-                hasModifiers: true
+                bonusName: "Planekonomi",
+                bonus: -2
             },
             'B': {
                 task: "Tillsammans med Betong-Jerka väljer du att försöka hyra ut huset i Hammarskog till ett företag som kan få driva kafé där. Det fungerade inte på Skarholmen, men skam den som ger sig.",
-                target: 10,
-                stretch: null,
-                hasModifiers: false
+                bonusName: "Blandekonomi",
+                bonus: 0
             },
             'C': {
                 task: "Tillsammans med Frihets-Tessan väljer vi att låta entreprenörer som kan besöksverksamhet och restaurang ta över huset i Hammarskog. Vi tror inte att kommunen ska driva kaféer och restauranger. Dels för att de inte ska använda skattepengar för att konkurrera med privata initiativ och dels för att de inte gör det bra.",
-                target: 5,
-                stretch: 8,
-                hasModifiers: false
+                bonusName: "Marknadsekonomi",
+                bonus: 5
             }
         };
         this.isRolling = false;
@@ -87,16 +88,14 @@ class UIController {
         // Screen 3 Elements
         this.taskTitle = document.getElementById('task-title');
         this.taskDesc = document.getElementById('task-desc');
-        this.targetNumber = document.getElementById('target-number');
-        this.modifiersContainer = document.getElementById('modifiers-container');
-        this.modCheckboxes = document.querySelectorAll('.modifier-checkbox input');
+        this.charBonusName = document.getElementById('char-bonus-name');
+        this.charBonusValue = document.getElementById('char-bonus-value');
         
         this.btnRoll = document.getElementById('btn-roll');
         this.diceDisplay = document.getElementById('dice-display');
         this.die1 = document.querySelector('#die-1 .die-val');
         this.die2 = document.querySelector('#die-2 .die-val');
         this.diceCalc = document.getElementById('dice-calc');
-        this.diceArea = document.querySelector('.dice-display'); // Using dice-display as the area now
         
         this.rerollContainer = document.getElementById('reroll-container');
         this.btnReroll = document.getElementById('btn-reroll');
@@ -136,10 +135,7 @@ class UIController {
             this.transitionToScreen(3);
         });
 
-        // Screen 3 Modifiers
-        this.modCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => this.calculateModifiers());
-        });
+        // (Modifiers are now automatic per character, no checkboxes needed)
 
         // Screen 3 Roll Dice
         this.btnRoll.addEventListener('click', () => this.handleDiceRoll());
@@ -176,35 +172,24 @@ class UIController {
         const charData = this.characterData[this.state.selectedCharacter];
         
         this.taskDesc.textContent = charData.task;
-        this.targetNumber.textContent = charData.target;
         
-        if (charData.hasModifiers) {
-            this.modifiersContainer.classList.remove('hidden');
-        } else {
-            this.modifiersContainer.classList.add('hidden');
-        }
+        // Set character bonus display
+        this.charBonusName.textContent = charData.bonusName;
+        const bonusPrefix = charData.bonus > 0 ? '+' : '';
+        this.charBonusValue.textContent = `${bonusPrefix}${charData.bonus}`;
+        
+        // Set the modifier in state
+        this.state.modifiers = charData.bonus;
 
         // Reset UI for replayability if needed
-        this.diceArea.classList.remove('outcome-success', 'outcome-fail', 'extra-success');
+        this.diceDisplay.classList.remove('outcome-success', 'outcome-fail', 'extra-success');
         this.diceDisplay.classList.add('hidden');
         this.btnRoll.classList.remove('hidden');
         this.btnNextScreen4.classList.add('hidden');
         this.rerollContainer.classList.add('hidden');
-        
-        // Reset checkboxes
-        this.modCheckboxes.forEach(cb => cb.checked = false);
-        this.calculateModifiers();
     }
 
-    calculateModifiers() {
-        let total = 0;
-        this.modCheckboxes.forEach(cb => {
-            if (cb.checked) {
-                total += parseInt(cb.value);
-            }
-        });
-        this.state.modifiers = total;
-    }
+    // Modifiers are now set automatically in setupScreen3()
 
     handleDiceRoll() {
         if (this.isRolling) return;
@@ -242,37 +227,32 @@ class UIController {
         this.state.diceResult = roll;
         const charData = this.characterData[this.state.selectedCharacter];
         
-        // Evaluate
-        GameLogic.evaluateResult(this.state, charData.target, charData.stretch);
-        
+        // Evaluate against universal targets
         const total = roll + this.state.modifiers;
+        this.state.isSuccess = total >= this.TARGET_OK;
+        this.state.isExtraSuccess = total >= this.TARGET_BLOMSTRANDE;
         
         // Update UI
         if(this.die1) this.die1.textContent = d1;
         if(this.die2) this.die2.textContent = d2;
         
+        const bonusPrefix = this.state.modifiers >= 0 ? '+' : '';
         let calcText = `Tärningar: ${d1} + ${d2} = ${roll}`;
-        if (this.state.modifiers > 0) calcText += ` | + Bonus: ${this.state.modifiers}`;
-        calcText += ` | Totalt: ${total} (Mål: ${charData.target})`;
+        calcText += ` | ${charData.bonusName}: ${bonusPrefix}${this.state.modifiers}`;
+        calcText += ` | Totalt: ${total}`;
         this.diceCalc.textContent = calcText;
 
         // Visual Feedback
-        if (this.state.isSuccess) {
+        if (this.state.isExtraSuccess) {
+            this.diceDisplay.classList.add('outcome-success', 'extra-success');
+        } else if (this.state.isSuccess) {
             this.diceDisplay.classList.add('outcome-success');
-            if (this.state.isExtraSuccess) {
-                this.diceDisplay.classList.add('extra-success');
-            }
         } else {
             this.diceDisplay.classList.add('outcome-fail');
         }
 
-        // Logic for next steps
-        if (this.state.selectedCharacter === 'C' && !this.state.isSuccess) {
-            // Infinite Reroll Mechanic for C
-            this.rerollContainer.classList.remove('hidden');
-        } else {
-            this.btnNextScreen4.classList.remove('hidden');
-        }
+        // Logic for next steps — always proceed to outcome
+        this.btnNextScreen4.classList.remove('hidden');
     }
 
     setupScreen4() {
@@ -305,8 +285,17 @@ class UIController {
  */
 class App {
     static init() {
+        App.checkMobile();
         const state = new GameState();
         new UIController(state);
+    }
+
+    static checkMobile() {
+        const isMobile = window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            document.body.classList.add('mobile-device');
+            console.log("Mobile device detected. Applying responsive layouts.");
+        }
     }
 }
 
