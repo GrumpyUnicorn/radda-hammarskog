@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rädda Hammarskog</title>
+    <meta name="description" content="Ett spel om att rädda Hammarskog.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Bebas+Neue&family=Roboto+Mono:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Screen 1: Landing Page -->
+        <section id="screen-1" class="screen visible">
+            <div class="content-wrapper centered">
+                <h1 class="main-title">Rädda Hammarskog</h1>
+                <p class="subtitle">Ett spel bitvis inspirerat av verkliga händelser men absolut inte inspirerat av AiP
+                    eller andra trollfabriker.</p>
+                <button id="btn-start" class="btn primary large mt-4">Starta spelet</button>
+            </div>
+        </section>
+
+        <!-- Screen 2: Character Selection -->
+        <section id="screen-2" class="screen hidden">
+            <div class="content-wrapper">
+                <h2 class="screen-title text-center">Vem vill du rädda Hammarskog med?</h2>
+                <div class="cards-container">
+                    <div class="card" data-char="A">
+                        <div class="card-inner">
+                            <div class="card-image"><img src="tobbe.png" alt="Skandal-Tobbe portrait"></div>
+                            <h3>Skandal-Tobbe</h3>
+                            <p>Mest känd att ha tagit bort bakgrundskontrollerna i äldrevården och därefter försökt
+                                mörka övergrepp mot äldre. Vill att staten ska kontrollera produktionsmedlen.</p>
+                        </div>
+                    </div>
+                    <div class="card" data-char="B">
+                        <div class="card-inner">
+                            <div class="card-image"><img src="jerka.png" alt="Betong-Jerka portrait"></div>
+                            <h3>Betong-Jerka</h3>
+                            <p>Mest känd för att vilja bygga gigantiska betonggetton i hela Uppsala. Det senaste blev
+                                genast ett utanförskapsområde. Vill att kommunen (som han leder) ska kontrollera allt.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card" data-char="C">
+                        <div class="card-inner">
+                            <div class="card-image"><img src="tessan.png" alt="Frihets-Tessan portrait"></div>
+                            <h3>Frihets-Tessan</h3>
+                            <p>Mest känd för att vilja satsa på skola och trygghet. Sätter människan framför systemet.
+                                Tror på marknadsekonomi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-footer">
+                    <button id="btn-next-screen-3" class="btn primary disabled" disabled>Nästa</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 3: Showdown -->
+        <section id="screen-3" class="screen hidden">
+            <div class="content-wrapper">
+                <h2 id="task-title" class="screen-title text-center">Uppgift</h2>
+                
+                <!-- Top Section: Approach -->
+                <div class="task-panel section-panel">
+                    <h3>Ditt tillvägagångssätt</h3>
+                    <p id="task-desc" class="task-desc"></p>
+                </div>
+                
+                <!-- Middle Section: Mechanics -->
+                <div class="task-panel section-panel">
+                    <div class="target-container">
+                        <span>Svårighetsgrad: </span><span id="target-number" class="target-badge"></span>
+                    </div>
+                    <p class="difficulty-desc" style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1rem;">(Svårighetsgraden är det tal du måste slå med två tärningar för att lyckas)</p>
+                    
+                    <div id="modifiers-container" class="modifiers-panel hidden mt-4">
+                        <h3>Bonusar</h3>
+                        <label class="modifier-checkbox">
+                            <input type="checkbox" id="mod-1" value="1">
+                            <span class="checkmark"></span>
+                            Gör om till arbetsmarknadsprojekt (+1)
+                        </label>
+                        <label class="modifier-checkbox">
+                            <input type="checkbox" id="mod-2" value="1">
+                            <span class="checkmark"></span>
+                            Använd skattepengar till driften (+1)
+                        </label>
+                    </div>
+
+                    <div class="dice-area text-center mt-4">
+                        <button id="btn-roll" class="btn primary large">Rulla tärningarna</button>
+                    </div>
+                </div>
+
+                <!-- Bottom Section: Action -->
+                <div class="task-panel section-panel">
+                    <div id="dice-display" class="dice-display hidden">
+                        <div class="bg3-dice-container" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                            <div class="d6-die dice-box" id="die-1"><span class="die-val">0</span></div>
+                            <div class="d6-die dice-box" id="die-2"><span class="die-val">0</span></div>
+                        </div>
+                        <p id="dice-calc" class="dice-calc mt-4"></p>
+                    </div>
+
+                    <div id="reroll-container" class="reroll-panel hidden mt-4">
+                        <p>Entreprenören misslyckades och säljer. Nya tar över.</p>
+                        <button id="btn-reroll" class="btn secondary mt-2">Rulla igen!</button>
+                    </div>
+
+                    <div class="action-footer text-center" style="justify-content: center;">
+                        <button id="btn-next-screen-4" class="btn primary hidden">Se hur det gick för Hammarskog!</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 4: Outcome -->
+        <section id="screen-4" class="screen hidden">
+            <div class="content-wrapper centered">
+                <h2 class="screen-title">Resultat</h2>
+                <div class="outcome-panel">
+                    <p id="outcome-text" class="outcome-text"></p>
+                </div>
+                <button id="btn-reload" class="btn secondary mt-large">Reload the page to play again</button>
+            </div>
+        </section>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>
