@@ -104,6 +104,8 @@ class UIController {
         // Screen 4 Elements
         this.outcomeText = document.getElementById('outcome-text');
         this.btnReload = document.getElementById('btn-reload');
+        this.scoreMarker = document.getElementById('score-marker');
+        this.markerValue = document.getElementById('marker-value');
     }
 
     bindEvents() {
@@ -259,6 +261,7 @@ class UIController {
         const char = this.state.selectedCharacter;
         const success = this.state.isSuccess;
         const extraSuccess = this.state.isExtraSuccess;
+        const total = this.state.diceResult + this.state.modifiers;
         let text = "";
 
         if (char === 'A' && !success) {
@@ -277,6 +280,22 @@ class UIController {
         }
 
         this.outcomeText.textContent = text;
+
+        // Position the score marker on the scale
+        // Clamp total to 0-17 range, then convert to percentage
+        const clampedTotal = Math.max(0, Math.min(17, total));
+        const percentage = (clampedTotal / 17) * 100;
+        this.markerValue.textContent = total;
+
+        // Reset marker to 0 first, then animate to position
+        this.scoreMarker.style.transition = 'none';
+        this.scoreMarker.style.left = '0%';
+        // Force reflow to reset animation
+        this.scoreMarker.offsetHeight;
+        this.scoreMarker.style.transition = 'left 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        setTimeout(() => {
+            this.scoreMarker.style.left = percentage + '%';
+        }, 200);
     }
 }
 

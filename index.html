@@ -130,10 +130,37 @@
         <section id="screen-4" class="screen hidden">
             <div class="content-wrapper centered">
                 <h2 class="screen-title">Resultat</h2>
+
+                <!-- Score Scale -->
+                <div class="score-scale-panel">
+                    <div class="scale-bar">
+                        <div class="scale-zone zone-katastrof" style="width: 29.4%;">
+                            <span class="zone-label">Katastrof</span>
+                        </div>
+                        <div class="scale-zone zone-misslyckat" style="width: 29.4%;">
+                            <span class="zone-label">Misslyckat</span>
+                        </div>
+                        <div class="scale-zone zone-ok" style="width: 17.7%;">
+                            <span class="zone-label">Ok</span>
+                        </div>
+                        <div class="scale-zone zone-blomstrande" style="width: 23.5%;">
+                            <span class="zone-label">Blomstrande</span>
+                        </div>
+                    </div>
+                    <div class="scale-numbers">
+                        <span>0</span><span>5</span><span>10</span><span>13</span><span>17</span>
+                    </div>
+                    <div class="scale-marker-track">
+                        <div class="scale-marker" id="score-marker">
+                            <span class="marker-value" id="marker-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="outcome-panel">
                     <p id="outcome-text" class="outcome-text"></p>
                 </div>
-                <button id="btn-reload" class="btn secondary mt-large">Reload the page to play again</button>
+                <button id="btn-reload" class="btn secondary mt-large">Spela igen</button>
             </div>
         </section>
     </div>
